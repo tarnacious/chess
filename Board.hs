@@ -1,5 +1,5 @@
 module Board where
-import Char
+import Data.Char
 import Utils
 
 -- **************** data types *******************
