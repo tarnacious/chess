@@ -1,15 +1,6 @@
+module Parser where
 import Parsing
 import Board
-
-pretty                 :: Maybe Board -> String 
-pretty Nothing         = "No board :("
-pretty (Just a)        = prettyBoard a
-
-initial                :: Maybe Board
-initial                = board(prettyBoard(initialBoard)) 
-
-demo                   :: String
-demo                   = "RW RW\nRW RW"
 
 board                  :: String -> Maybe Board 
 board s                = board' (parse rows s)
@@ -21,7 +12,6 @@ board' [(_, _)]        = Nothing
 
 row                   :: Parser[Square]
 row                   = do m <- take' square 8
-                           --many( token (Parsing.char '\n'))
                            return m
 
 rows                  :: Parser Board
