@@ -81,6 +81,12 @@ many1 p                       =  do v  <- p
                                     vs <- many p
                                     return (v:vs)
 
+take'                         :: Parser a -> Int -> Parser [a]
+take' _ 0                     = return []
+take' p c                     = do v <- p
+                                   vs <- take' p (c - 1)                   
+                                   return (v: vs)
+
 ident                         :: Parser String
 ident                         =  do x  <- lower
                                     xs <- many alphanum
