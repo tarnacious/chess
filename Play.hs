@@ -5,23 +5,22 @@ import Minimax
 import Moves
 import Game
 
--- putStr $ pretty $ tryplay White initial 
+-- :l Play 
+-- putStr $ pretty $ tryplay $ tryplay initial
 
-pretty                 :: Maybe Board -> String 
+pretty                 :: Maybe State -> String 
 pretty Nothing         = "No board :("
-pretty (Just a)        = prettyBoard a
+pretty (Just a)        = case a of 
+                            (White, c) -> "White \n\n" ++ (prettyBoard c)
+                            (Black, c) -> "Black \n\n" ++ (prettyBoard c)
+                            
+initial                :: Maybe State
+initial                = case (boardParser $ prettyBoard $ initialBoard) of
+                            (Just b) -> Just (White, b)
+                            otherwise -> Nothing 
 
-initial                :: Maybe Board
-initial                = board $ prettyBoard $ initialBoard 
+tryplay                :: Maybe State -> Maybe State
+tryplay Nothing        = Nothing
+tryplay (Just b)       = Just (doMove b) 
 
-tryplay                :: PieceColor -> Maybe Board -> Maybe Board
-tryplay _ Nothing      = Nothing
-tryplay c (Just b)     = Just(getboard(play' c b))
 
-getboard               :: State -> Board
-getboard (_, b)        = b                   
-
-play'                   :: PieceColor -> Board -> State
-play' color board       = doMove(color, board)
-
- 

@@ -1,14 +1,40 @@
 module Parser where
 import Parsing
+
 import Board
+import Minimax
+import Moves
+import Game
 
-board                  :: String -> Maybe Board 
-board s                = board' (parse rows s)
+boardParser            :: String -> Maybe Board 
+boardParser s          = case parse board s of
+                              [(b, "")] -> Just(b)
+                              otherwise -> Nothing
 
-board'                 :: [(Board,String)] -> Maybe Board
-board' []              = Nothing
-board' [(b, "")]       = Just(b)
-board' [(_, _)]        = Nothing
+stateParser            :: String -> Maybe State 
+stateParser s          = case parse Parser.state s of
+                              [(s, "")] -> Just(s)
+                              otherwise -> Nothing
+
+state                  :: Parser State
+state                  =  do m <- turn
+                             b <- board
+                             return (m, b)
+
+turn                   :: Parser PieceColor
+turn                   = whiteMove +++ blackMove 
+
+whiteMove              :: Parser PieceColor
+whiteMove              =  do Parsing.string "White"
+                             return White
+
+blackMove              :: Parser PieceColor
+blackMove              =  do Parsing.string "Black"
+                             return Black
+
+board                  :: Parser Board
+board                  =  do b <- rows
+                             return b
 
 row                   :: Parser[Square]
 row                   = do m <- take' square 8
