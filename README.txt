@@ -1,38 +1,58 @@
-/****************************************************************************
-*                                                                           *
-* Haskell Chess                                                             *
-*                                                                           *
-* Haskell Chess is a collection of Haskell modules that implement most      *
-* aspects of the board game Chess. Basically we provide a move generator    *
-* (finding all possible next moves) and a minimax algorithm (computing the  *
-* best move up to a particular depth of the game tree).                     *
-* The program solves simple mate problems. By now it plays both Black and   *
-* White, however it can easily extended to also play against human players. *
-*                                                                           *
-* Copyright (C) 2007 Steffen Mazanek                                        *
-*                                                                           *
-* This program is free software; you can redistribute it and/or modify      *
-* it under the terms of the GNU General Public License as published by      *
-* the Free Software Foundation; either version 2 of the License, or         *
-* (at your option) any later version.                                       *
-*                                                                           *
-* This program is distributed in the hope that it will be useful,           *
-* but WITHOUT ANY WARRANTY; without even the implied warranty of            *
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
-* GNU General Public License for more details.                              *
-*                                                                           *
-* You should have received a copy of the GNU General Public License         *
-* along with this program; if not, write to the Free Software               *
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA *
-*                                                                           *
-* Contact Adresses:                                                         *
-*                                                                           *
-* Steffen Mazanek                                                           *
-* Institut für Softwaretechnologie                                          *
-* Universität der Bundeswehr München                                        *
-* 85577 Neubiberg                                                           *
-* Germany                                                                   *
-*                                                                           *
-* email: smazanek@steffen-mazanek.de                                        *
-*                                                                           *
-****************************************************************************/
+Description
+-----------
+
+Building out the ["Learning Haskell with Chess"][tutorial] tutorial as a very slow chess engine.
+It can currently make moves (badly) and return possible moves.
+
+ZeroMQ binding have been added so it can used by a socket server that coordinates players and games.
+
+I intend to extend it to validate moves and eventually play ["Transfer Chess"][bughouse].
+
+Dependencies
+------------
+
+Depends on the [zeromq-haskell][zmq-haskell] package.
+
+Usage 
+-----
+
+An example of the format is parses and returns 
+
+    $ cat initialBoard
+    White 
+
+    RB NB BB QB KB BB NB RB 
+    PB PB PB PB PB PB PB PB 
+    -- -- -- -- -- -- -- -- 
+    -- -- -- -- -- -- -- -- 
+    -- -- -- -- -- -- -- -- 
+    -- -- -- -- -- -- -- -- 
+    PW PW PW PW PW PW PW PW 
+    RW NW BW QW KW BW NW RW
+
+Play a couple of moves from the shell
+
+    $ cat initialBoard | runhaskell CliMove.hs | runhaskell CliMove.hs
+    White 
+
+    RB NB BB QB KB BB NB RB 
+    PB PB PB PB PB PB PB -- 
+    -- -- -- -- -- -- -- PB 
+    -- -- -- -- -- -- -- -- 
+    -- -- -- -- -- -- -- -- 
+    -- -- -- -- -- NW -- -- 
+    PW PW PW PW PW PW PW PW 
+    RW NW BW QW KW BW -- RW
+
+Start a zmq client
+
+    $ runhaskell Client.hs
+
+Start a zmq Server
+
+    $ runhaskell Server.hs
+
+
+[bughouse]: http://en.wikipedia.org/wiki/Bughouse_chess
+[zmq-haskell]: http://hackage.haskell.org/package/zeromq-haskell
+[tutorial]: http://www.haskell.org/haskellwiki/Learning_Haskell_with_Chess
