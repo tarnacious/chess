@@ -16,12 +16,15 @@ valuePiece Bishop = 3
 valuePiece Queen = 9
 valuePiece King = infinity
 
+
 -- aggregated value of material of both players
 boardAnalysis::Board->(Int,Int)
-boardAnalysis = foldl addValue (0,0) . concat 
-   where addValue points Nothing = points
-         addValue (pw,pb) (Just (Piece a f)) | f == Black = (pw, pb + valuePiece a)
+boardAnalysis b = foldl addValue (0,0) (map (\s -> s) (concat b)) 
+   where addValue points (Square Nothing) = points
+         addValue (pw,pb) (Square (Just (Piece a f))) | f == Black = (pw, pb + valuePiece a)
                                              | otherwise = (pw + valuePiece a, pb)
+
+
 
 evalBoard::Board->Int
 evalBoard b = let (p1,p2) = boardAnalysis b in p1-p2

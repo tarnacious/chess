@@ -8,7 +8,7 @@ main = do
       putStrLn "Connecting to Chess server..."  
       withSocket context Req $ \socket -> do
         do 
-            start <- readFile "initialBoard"
+            start <- readFile "start.json"
             connect socket "tcp://localhost:5555"
             sender socket start 10
 

@@ -1,6 +1,6 @@
 module Play where
-import Parsing
-import Parser
+--import Parsing
+--import Parser
 import Board
 import Minimax
 import Moves
@@ -18,10 +18,10 @@ pretty (Just a)        = case a of
                             (Black, c) -> "Black \n\n" ++ (prettyBoard c)
                             
 
-initial                :: Maybe State
-initial                = case (boardParser $ prettyBoard $ initialBoard) of
-                            (Just b) -> Just (White, b)
-                            otherwise -> Nothing 
+--initial                :: Maybe State
+--initial                = case (Parser $ prettyBoard $ initialBoard) of
+--                            (Just b) -> Just (White, b)
+--                            otherwise -> Nothing 
 
 
 tryplay                :: Maybe State -> Maybe State
@@ -36,7 +36,7 @@ getMoves _             = []
 
 getPieceMoves          :: Board -> (Int, Int) -> [(PieceType, (Int, Int), (Int, Int))]
 getPieceMoves b p      = case getSquare b p of
-                            (Just (Piece t c)) -> case genPieceMoves b p (Piece t c) of
+                            (Square (Just (Piece t c))) -> case genPieceMoves b p (Piece t c) of
                                            pos -> map (\to -> (t,p,to)) pos
                             otherwise -> []
 

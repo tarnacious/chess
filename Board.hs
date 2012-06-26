@@ -8,7 +8,10 @@ data Piece = Piece {pieceType::PieceType, pieceColor::PieceColor} deriving Eq
 data PieceType = Rook | Knight | Bishop | King | Queen | Pawn deriving Eq
 data PieceColor = Black | White deriving Eq
 
-type Square = Maybe Piece
+data Square = Square (Maybe Piece) deriving Eq
+
+
+--type Square = Maybe Piece
 
 type Board = [[Square]]
 
@@ -17,10 +20,10 @@ type Pos = (Int, Int)
 -- **************** output functions *******************
 
 prettyBoard::Board->String
-prettyBoard  = unlines . map (concatMap prettySquare)
+prettyBoard  = unlines . map (concatMap show)
 
 prettyBoardIndent::Int->Board->String
-prettyBoardIndent x = ('\n':) . concatMap ((('\n':take x (repeat ' '))++) . concatMap prettySquare)
+prettyBoardIndent x = ('\n':) . concatMap ((('\n':take x (repeat ' '))++) . concatMap show)
 
 instance Show PieceColor where
  show Black = "B"
@@ -34,9 +37,12 @@ instance Show PieceType where
  show Bishop = "B"
  show Pawn = "P"
 
-prettySquare::Square->String
-prettySquare Nothing = "-- "
-prettySquare (Just (Piece a f)) = show a ++ show f ++ " "
+instance Show Piece where
+ show (Piece a b) = show a ++ show b
+
+instance Show Square where
+ show (Square (Just p)) = show p
+ show (Square Nothing) = "--"
 
 -- **************** auxiliary board functions *******************
 
@@ -45,10 +51,10 @@ oppositeColor White = Black
 oppositeColor Black = White
 
 isEmpty::Board->Pos->Bool
-isEmpty board pos = Nothing == getSquare board pos
+isEmpty board pos = (Square Nothing) == getSquare board pos
 
 emptySquare::Square
-emptySquare = Nothing
+emptySquare = Square Nothing
 
 getSquare::Board->Pos->Square
 getSquare board (a, b) = board!!a!!b
@@ -79,13 +85,13 @@ colorPos::PieceColor->Board->[Pos]
 colorPos f board = [(a, b)|a<-[0..7],b<-[0..7], hasColor f (getSquare board (a,b))]
 
 hasColor::PieceColor->Square->Bool
-hasColor _ Nothing = False
-hasColor f1 (Just (Piece a f2)) = f1 == f2
+hasColor _ (Square Nothing) = False
+hasColor f1 (Square (Just (Piece a f2))) = f1 == f2
 
 -- **************** some boards *******************
 
 initialBoard, emptyBoard::Board
-initialBoard = [[Just (Piece Rook Black), Just (Piece Knight Black), Just (Piece Bishop Black), Just (Piece Queen Black), Just (Piece King Black), Just (Piece Bishop Black), Just (Piece Knight Black), Just (Piece Rook Black)],
+initialBoard = map (\row -> map (\p -> Square p) row) [[Just (Piece Rook Black), Just (Piece Knight Black), Just (Piece Bishop Black), Just (Piece Queen Black), Just (Piece King Black), Just (Piece Bishop Black), Just (Piece Knight Black), Just (Piece Rook Black)],
                 [Just (Piece Pawn Black), Just (Piece Pawn Black), Just (Piece Pawn Black), Just (Piece Pawn Black), Just (Piece Pawn Black), Just (Piece Pawn Black), Just (Piece Pawn Black), Just (Piece Pawn Black)],
                 [Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing],
                 [Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing],
@@ -94,5 +100,5 @@ initialBoard = [[Just (Piece Rook Black), Just (Piece Knight Black), Just (Piece
                 [Just (Piece Pawn White), Just (Piece Pawn White), Just (Piece Pawn White), Just (Piece Pawn White), Just (Piece Pawn White), Just (Piece Pawn White), Just (Piece Pawn White), Just (Piece Pawn White)],
                 [Just (Piece Rook White), Just (Piece Knight White), Just (Piece Bishop White), Just (Piece Queen White), Just (Piece King White), Just (Piece Bishop White), Just (Piece Knight White), Just (Piece Rook White)]]
 
-emptyBoard = [[Nothing|_<-[1..8]]|_<-[1..8]]
+emptyBoard = [[Square Nothing|_<-[1..8]]|_<-[1..8]]
 

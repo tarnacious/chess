@@ -27,8 +27,8 @@ direction Black = 1
 -- move generator, simple pawn, no castling
 genMoves::Board->Pos->[Board]
 genMoves b pos = case getSquare b pos of
-                   Nothing -> [] 
-                   Just p -> map (flip (movePos pos) b) $ genPieceMoves b pos p 
+                   Square Nothing -> [] 
+                   Square (Just p) -> map (flip (movePos pos) b) $ genPieceMoves b pos p 
 
 genPieceMoves::Board->Pos->Piece->[Pos]
 genPieceMoves b pos (Piece Knight f) = [coord|v<-moves Knight, let coord = addPair pos v, notColor b f coord]
@@ -38,7 +38,7 @@ genPieceMoves b pos (Piece Pawn f) = (filter (empty b) [addPair pos (direction f
 genPieceMoves b pos (Piece x f) = concatMap (iterateDirection 1 pos b f) (moves x)
 
 notColor b f p      = inside p && not (hasColor f (getSquare b p))
-empty b p           = inside p && Nothing == (getSquare b p)
+empty b p           = inside p && Square Nothing == (getSquare b p)
 oppositePiece b f p = inside p && hasColor (oppositeColor f) (getSquare b p) 
 
 -- gets moving vectors for rooks, queens and bishops, the first paramater pos is the 
@@ -46,8 +46,8 @@ oppositePiece b f p = inside p && hasColor (oppositeColor f) (getSquare b p)
 iterateDirection::Int->Pos->Board->PieceColor->Pos->[Pos]
 iterateDirection n pos b f r | outside aimsAt = []
                              | otherwise = case getSquare b aimsAt of
-                                             Nothing -> aimsAt:iterateDirection (n+1) pos b f r
-                                             Just (Piece _ f2) -> if f==f2 then [] else [aimsAt]
+                                             Square(Nothing) -> aimsAt:iterateDirection (n+1) pos b f r
+                                             Square(Just (Piece _ f2)) -> if f==f2 then [] else [aimsAt]
    where aimsAt = addPair (multPair n r) pos
 
 nextStates::State->[State]

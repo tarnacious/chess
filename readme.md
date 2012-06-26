@@ -18,31 +18,25 @@ Usage
 
 An example of the format is parses and returns 
 
-    $ cat initialBoard
-    White 
+    $ cat start.json
+    { 
+      "Turn" : "White", 
+      "Board" : [
+                ["RB", "NB", "BB", "QB", "KB", "BB", "NB", "RB"], 
+                ["PB", "PB", "PB", "PB", "PB", "PB", "PB", "PB"], 
+                ["--", "--", "--", "--", "--", "--", "--", "--"], 
+                ["--", "--", "--", "--", "--", "--", "--", "--"], 
+                ["--", "--", "--", "--", "--", "--", "--", "--"], 
+                ["--", "--", "--", "--", "--", "--", "--", "--"], 
+                ["PW", "PW", "PW", "PW", "PW", "PW", "PW", "PW"], 
+                ["RW", "NW", "BW", "QW", "KW", "BW", "NW", "RW"] 
+                ]
+    }
 
-    RB NB BB QB KB BB NB RB 
-    PB PB PB PB PB PB PB PB 
-    -- -- -- -- -- -- -- -- 
-    -- -- -- -- -- -- -- -- 
-    -- -- -- -- -- -- -- -- 
-    -- -- -- -- -- -- -- -- 
-    PW PW PW PW PW PW PW PW 
-    RW NW BW QW KW BW NW RW
+Play a couple of moves from the shell. Output no longer pretty formated :(
 
-Play a couple of moves from the shell
-
-    $ cat initialBoard | runhaskell CliMove.hs | runhaskell CliMove.hs
-    White 
-
-    RB NB BB QB KB BB NB RB 
-    PB PB PB PB PB PB PB -- 
-    -- -- -- -- -- -- -- PB 
-    -- -- -- -- -- -- -- -- 
-    -- -- -- -- -- -- -- -- 
-    -- -- -- -- -- NW -- -- 
-    PW PW PW PW PW PW PW PW 
-    RW NW BW QW KW BW -- RW
+    $ cat start.json | runhaskell CliMove.hs | runhaskell CliMove.hs
+    {"Turn":"White","Board":[["RB","NB","BB","QB","KB","BB","NB","RB"],["PB","PB","PB","PB","PB","PB","PB","--"],["--","--","--","--","--","--","--","PB"],["--","--","--","--","--","--","--","--"],["--","--","--","--","--","--","--","--"],["--","--","--","--","--","NW","--","--"],["PW","PW","PW","PW","PW","PW","PW","PW"],["RW","NW","BW","QW","KW","BW","--","RW"]]}
 
 Start a zmq client
 
